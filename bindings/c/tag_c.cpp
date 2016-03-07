@@ -40,6 +40,9 @@
 #include <string.h>
 #include <id3v2framefactory.h>
 
+#include <sstream>
+#include <tpropertymap.h>
+
 #include "tag_c.h"
 
 using namespace TagLib;
@@ -148,6 +151,28 @@ const TagLib_AudioProperties *taglib_file_audioproperties(const TagLib_File *fil
 BOOL taglib_file_save(TagLib_File *file)
 {
   return reinterpret_cast<File *>(file)->save();
+}
+
+char *taglib_file_property(const TagLib_File *file, const char *key)
+{
+	const File *f = reinterpret_cast<const File *>(file);
+	TagLib::PropertyMap p = f->properties();
+	PropertyMap::Iterator i = p.find(key);
+	if (i != p.end()) {
+		std::stringstream ss;
+		//unsigned int count = i->second.size();
+		for (TagLib::StringList::ConstIterator j = i->second.begin(); j != i->second.end(); ++j) {
+			if (j != i->second.begin()) {
+				ss << "; ";
+			}
+			ss << *j;
+		}
+		char *s = stringToCharArray(ss.str());
+		if (stringManagementEnabled)
+			strings.append(s);
+		return s;
+	}
+	return "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

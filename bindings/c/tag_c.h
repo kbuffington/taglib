@@ -137,6 +137,12 @@ TAGLIB_C_EXPORT BOOL taglib_file_is_valid(const TagLib_File *file);
 TAGLIB_C_EXPORT TagLib_Tag *taglib_file_tag(const TagLib_File *file);
 
 /*!
+* Returns a pointer to the propertymap associated with this file.  This will be freed
+* automatically when the file is freed.
+*/
+TAGLIB_C_EXPORT char *taglib_file_property(const TagLib_File *file, const char *key);
+
+/*!
  * Returns a pointer to the the audio properties associated with this file.  This
  * will be freed automatically when the file is freed.
  */
