@@ -137,8 +137,15 @@ TAGLIB_C_EXPORT BOOL taglib_file_is_valid(const TagLib_File *file);
 TAGLIB_C_EXPORT TagLib_Tag *taglib_file_tag(const TagLib_File *file);
 
 /*!
-* Returns a pointer to the propertymap associated with this file.  This will be freed
-* automatically when the file is freed.
+* Get the count of strings values associated with key, and the length of the
+* string taglib_file_property will return for that key. Return FALSE if key 
+* is not found.
+*/
+TAGLIB_C_EXPORT BOOL taglib_file_property_attrs(const TagLib_File *file, const char *key, unsigned int *count, size_t *length);
+
+/*!
+* Returns a string with the value associated with the key. If Key has multiple
+* values they will be concatenated and seperated with "; "
 */
 TAGLIB_C_EXPORT char *taglib_file_property(const TagLib_File *file, const char *key);
 
