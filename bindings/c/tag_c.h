@@ -149,6 +149,12 @@ TAGLIB_C_EXPORT BOOL taglib_file_property_attrs(const TagLib_File *file, const c
 */
 TAGLIB_C_EXPORT char *taglib_file_property(const TagLib_File *file, const char *key);
 
+TAGLIB_C_EXPORT char *taglib_file_property_key_index(const TagLib_File *file, const unsigned int index);
+
+TAGLIB_C_EXPORT char *taglib_mp3_file_picture_attrs(TagLib_File *file, unsigned int *type);
+
+TAGLIB_C_EXPORT BOOL taglib_mp3_file_picture(TagLib_File *file, const char *filename);
+
 /*!
  * Returns a pointer to the the audio properties associated with this file.  This
  * will be freed automatically when the file is freed.

@@ -43,6 +43,10 @@
 #include <sstream>
 #include <tpropertymap.h>
 
+#include <id3v2tag.h>
+#include <id3v2frame.h> //frame
+#include <attachedPictureFrame.h>
+
 #include "tag_c.h"
 
 using namespace TagLib;
@@ -193,6 +197,66 @@ char *taglib_file_property(const TagLib_File *file, const char *key)
 	}
 	return "";
 }
+
+char *taglib_file_property_key_index(const TagLib_File *file, const unsigned int index)
+{
+	const File *f = reinterpret_cast<const File *>(file);
+	TagLib::PropertyMap p = f->properties();
+	if (index < p.size()) {
+		PropertyMap::Iterator i = p.begin();
+		unsigned int j = 0;
+		while (j < index && i != p.end()) {
+			++i;
+			++j;
+		}
+		if (i != p.end()) {
+			char *s = stringToCharArray(i->first);
+			if (stringManagementEnabled)
+				strings.append(s);
+			return s;
+		}
+	}
+	return "";
+}
+
+char *taglib_mp3_file_picture_attrs(TagLib_File *file, unsigned int *type)
+{
+	MPEG::File *f = reinterpret_cast<MPEG::File *>(file);
+	ID3v2::Tag *mp3Tag = f->ID3v2Tag();
+	ID3v2::FrameList frameList = mp3Tag->frameList("APIC");
+	ID3v2::AttachedPictureFrame *pictureFrame;
+	if (!frameList.isEmpty()) {
+		ID3v2::FrameList::ConstIterator it = frameList.begin();
+		pictureFrame = static_cast<ID3v2::AttachedPictureFrame *> (*it);
+		char *s = stringToCharArray(pictureFrame->mimeType());
+		if (stringManagementEnabled)
+			strings.append(s);
+		*type = pictureFrame->type();
+
+		return s;
+	}
+	return "";
+}
+
+BOOL taglib_mp3_file_picture(TagLib_File *file, const char *filename)
+{
+	MPEG::File *f = reinterpret_cast<MPEG::File *>(file);
+	ID3v2::Tag *mp3Tag = f->ID3v2Tag();
+	ID3v2::FrameList frameList = mp3Tag->frameList("APIC");
+	ID3v2::AttachedPictureFrame *pictureFrame;
+	if (!frameList.isEmpty()) {
+		ID3v2::FrameList::ConstIterator it = frameList.begin();
+		pictureFrame = static_cast<ID3v2::AttachedPictureFrame *> (*it);
+		
+		FILE * fout;
+		fopen_s(&fout, filename, "wb");
+		fwrite(pictureFrame->picture().data(), pictureFrame->picture().size(), 1, fout);
+		fclose(fout);
+		return true;
+	}
+	return false;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // TagLib::Tag wrapper
