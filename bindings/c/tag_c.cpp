@@ -51,6 +51,8 @@
 
 using namespace TagLib;
 
+String _get_JSON_string(TagLib::PropertyMap p);
+
 namespace
 {
   List<char *> strings;
@@ -196,6 +198,47 @@ char *taglib_file_property(const TagLib_File *file, const char *key)
 		return s;
 	}
 	return "";
+}
+
+char *taglib_file_property_map_to_JSON(const TagLib_File *file)
+{
+	const File *f = reinterpret_cast<const File *>(file);
+	TagLib::PropertyMap p = f->properties();
+	char *s = stringToCharArray(_get_JSON_string(p));
+	if (stringManagementEnabled)
+		strings.append(s);
+	return s;
+}
+
+size_t taglib_file_property_map_to_JSON_length(const TagLib_File *file)
+{
+	const File *f = reinterpret_cast<const File *>(file);
+	TagLib::PropertyMap p = f->properties();
+	String s = _get_JSON_string(p);
+	return s.length();
+}
+
+String _get_JSON_string(TagLib::PropertyMap p)
+{
+	PropertyMap::Iterator i = p.begin();
+	std::stringstream ss;
+	ss << "{ ";
+	while (i != p.end()) {
+		if (i != p.begin()) {
+			ss << ", ";
+		}
+		ss << "\"" << i->first << "\": \"";
+		for (TagLib::StringList::ConstIterator j = i->second.begin(); j != i->second.end(); ++j) {
+			if (j != i->second.begin()) {
+				ss << "; ";
+			}
+			ss << *j;
+		}
+		ss << "\"";
+		i++;
+	}
+	ss << " }";
+	return ss.str();
 }
 
 char *taglib_file_property_key_index(const TagLib_File *file, const unsigned int index)

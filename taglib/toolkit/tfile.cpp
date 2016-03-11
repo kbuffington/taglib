@@ -113,7 +113,9 @@ FileName File::name() const
 PropertyMap File::properties() const
 {
   // ugly workaround until this method is virtual
-  if(dynamic_cast<const APE::File* >(this))
+  if (dynamic_cast<const MPEG::File* >(this))
+    return dynamic_cast<const MPEG::File* >(this)->properties();
+  if (dynamic_cast<const APE::File* >(this))
     return dynamic_cast<const APE::File* >(this)->properties();
   if(dynamic_cast<const FLAC::File* >(this))
     return dynamic_cast<const FLAC::File* >(this)->properties();
@@ -123,8 +125,6 @@ PropertyMap File::properties() const
     return dynamic_cast<const Mod::File* >(this)->properties();
   if(dynamic_cast<const MPC::File* >(this))
     return dynamic_cast<const MPC::File* >(this)->properties();
-  if(dynamic_cast<const MPEG::File* >(this))
-    return dynamic_cast<const MPEG::File* >(this)->properties();
   if(dynamic_cast<const Ogg::FLAC::File* >(this))
     return dynamic_cast<const Ogg::FLAC::File* >(this)->properties();
   if(dynamic_cast<const Ogg::Speex::File* >(this))
