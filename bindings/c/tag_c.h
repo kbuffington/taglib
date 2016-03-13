@@ -159,6 +159,8 @@ TAGLIB_C_EXPORT char *taglib_file_property_map_to_JSON(const TagLib_File *file);
 
 TAGLIB_C_EXPORT size_t taglib_file_property_map_to_JSON_length(const TagLib_File *file);
 
+TAGLIB_C_EXPORT void taglib_file_set_property(TagLib_File *file, const char *key, const char *value, BOOL multiValue);
+
 /*!
  * Returns a pointer to the the audio properties associated with this file.  This
  * will be freed automatically when the file is freed.

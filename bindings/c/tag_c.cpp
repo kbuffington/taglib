@@ -309,6 +309,31 @@ BOOL taglib_mp3_file_picture(TagLib_File *file, const char *filename)
 	return false;
 }
 
+void taglib_file_set_property(TagLib_File *file, const char *key, const char *value, BOOL multiValue)
+{
+	File *f = reinterpret_cast<File *>(file);
+	TagLib::PropertyMap p = f->properties();
+	TagLib::StringList valList;
+	if (multiValue) {
+		valList = TagLib::String(value).split("; ");
+	} else {
+		valList.append(TagLib::String(value));
+	}
+	p.erase(TagLib::String(key));
+
+	TagLib::StringList::Iterator it = valList.begin();
+	while (it != valList.end()) {
+		if (it->isEmpty()) {
+			valList.erase(it++);
+		} else {
+			it++;
+		}
+	}
+	if (valList.size()) {
+		p.insert(TagLib::String(key), valList);
+	}
+	f->setProperties(p);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // TagLib::Tag wrapper
