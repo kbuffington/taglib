@@ -195,7 +195,8 @@ namespace TagLib
 
 #if defined(HAVE_VSNPRINTF)
 
-        length = vsnprintf(buf, BufferSize, format, args);
+//		length = vsnprintf(buf, BufferSize, format, args);
+		length = vsnprintf_s(buf, BufferSize, format, args);
 
 #elif defined(HAVE_VSPRINTF_S)
 
