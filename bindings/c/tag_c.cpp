@@ -218,6 +218,15 @@ size_t taglib_file_property_map_to_JSON_length(const TagLib_File *file)
 	return s.length();
 }
 
+std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
+	size_t start_pos = 0;
+	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+	}
+	return str;
+}
+
 String _get_JSON_string(TagLib::PropertyMap p)
 {
 	PropertyMap::Iterator i = p.begin();
@@ -232,7 +241,7 @@ String _get_JSON_string(TagLib::PropertyMap p)
 			if (j != i->second.begin()) {
 				ss << "; ";
 			}
-			ss << *j;
+			ss << ReplaceAll(j->toCString(), "\"", "\\\"");		// escape double quotes
 		}
 		ss << "\"";
 		i++;
