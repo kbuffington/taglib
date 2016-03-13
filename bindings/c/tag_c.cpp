@@ -309,6 +309,17 @@ BOOL taglib_mp3_file_picture(TagLib_File *file, const char *filename)
 	return false;
 }
 
+void taglib_mp3_file_remove_picture(TagLib_File *file)
+{
+	MPEG::File *f = reinterpret_cast<MPEG::File *>(file);
+	ID3v2::Tag *mp3Tag = f->ID3v2Tag();
+	ID3v2::FrameList frameList = mp3Tag->frameList("APIC");
+	if (!frameList.isEmpty()) {
+		ID3v2::Frame *frame = (*frameList.begin());
+		mp3Tag->removeFrame(frame);
+	}
+}
+
 void taglib_file_set_property(TagLib_File *file, const char *key, const char *value, BOOL multiValue)
 {
 	File *f = reinterpret_cast<File *>(file);

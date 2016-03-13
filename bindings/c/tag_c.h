@@ -155,6 +155,8 @@ TAGLIB_C_EXPORT char *taglib_mp3_file_picture_attrs(TagLib_File *file, unsigned 
 
 TAGLIB_C_EXPORT BOOL taglib_mp3_file_picture(TagLib_File *file, const char *filename);
 
+TAGLIB_C_EXPORT void taglib_mp3_file_remove_picture(TagLib_File *file);
+
 TAGLIB_C_EXPORT char *taglib_file_property_map_to_JSON(const TagLib_File *file);
 
 TAGLIB_C_EXPORT size_t taglib_file_property_map_to_JSON_length(const TagLib_File *file);
