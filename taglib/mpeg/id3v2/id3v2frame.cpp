@@ -396,11 +396,11 @@ namespace
   const size_t frameTranslationSize = sizeof(frameTranslation) / sizeof(frameTranslation[0]);
 
   const char *txxxFrameTranslation[][2] = {
-    { "MUSICBRAINZ ALBUM ID",         "MUSICBRAINZ_ALBUMID" },
-    { "MUSICBRAINZ ARTIST ID",        "MUSICBRAINZ_ARTISTID" },
-    { "MUSICBRAINZ ALBUM ARTIST ID",  "MUSICBRAINZ_ALBUMARTISTID" },
-    { "MUSICBRAINZ RELEASE GROUP ID", "MUSICBRAINZ_RELEASEGROUPID" },
-    { "MUSICBRAINZ WORK ID",          "MUSICBRAINZ_WORKID" },
+    //{ "MUSICBRAINZ ALBUM ID",         "MUSICBRAINZ_ALBUMID" },
+    //{ "MUSICBRAINZ ARTIST ID",        "MUSICBRAINZ_ARTISTID" },
+    //{ "MUSICBRAINZ ALBUM ARTIST ID",  "MUSICBRAINZ_ALBUMARTISTID" },
+    //{ "MUSICBRAINZ RELEASE GROUP ID", "MUSICBRAINZ_RELEASEGROUPID" },
+    //{ "MUSICBRAINZ WORK ID",          "MUSICBRAINZ_WORKID" },
     { "ACOUSTID ID",                  "ACOUSTID_ID" },
     { "ACOUSTID FINGERPRINT",         "ACOUSTID_FINGERPRINT" },
     { "MUSICIP PUID",                 "MUSICIP_PUID" },
