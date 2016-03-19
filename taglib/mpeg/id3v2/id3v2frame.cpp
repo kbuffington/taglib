@@ -364,7 +364,7 @@ namespace
     { "TPE4", "REMIXER" }, // could also be ARRANGER
     { "TPOS", "DISCNUMBER" },
     { "TPRO", "PRODUCEDNOTICE" },
-    { "TPUB", "LABEL" },
+    { "TPUB", "PUBLISHER" },
     { "TRCK", "TRACKNUMBER" },
     { "TRSN", "RADIOSTATION" },
     { "TRSO", "RADIOSTATIONOWNER" },
