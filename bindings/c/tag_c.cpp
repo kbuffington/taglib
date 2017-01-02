@@ -271,6 +271,46 @@ char *taglib_file_property_key_index(const TagLib_File *file, const unsigned int
 	return "";
 }
 
+char *taglib_flac_file_picture_attrs(TagLib_File *file, unsigned int *type)
+{
+	FLAC::File *f = reinterpret_cast<FLAC::File *>(file);
+	List<FLAC::Picture *> picList = f->pictureList();
+	if (!picList.isEmpty()) {
+		List<FLAC::Picture *>::ConstIterator it = picList.begin();
+		FLAC::Picture *pictureFrame = (*it);
+		char *s = stringToCharArray(pictureFrame->mimeType());
+		if (stringManagementEnabled)
+			strings.append(s);
+		*type = pictureFrame->type();
+
+		return s;
+	}
+	return "";
+}
+
+BOOL taglib_flac_file_picture(TagLib_File *file, const char *filename)
+{
+	FLAC::File *f = reinterpret_cast<FLAC::File *>(file);
+	List<FLAC::Picture *> picList = f->pictureList();
+	if (!picList.isEmpty()) {
+		List<FLAC::Picture *>::ConstIterator it = picList.begin();
+		FLAC::Picture *pictureFrame = (*it);
+
+		FILE * fout;
+		fopen_s(&fout, filename, "wb");
+		fwrite(pictureFrame->data().data(), pictureFrame->data().size(), 1, fout);
+		fclose(fout);
+		return true;
+	}
+	return false;
+}
+
+void taglib_flac_file_remove_picture(TagLib_File *file)
+{
+	FLAC::File *f = reinterpret_cast<FLAC::File *>(file);
+	f->removePictures();
+}
+
 char *taglib_mp3_file_picture_attrs(TagLib_File *file, unsigned int *type)
 {
 	MPEG::File *f = reinterpret_cast<MPEG::File *>(file);
