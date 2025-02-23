@@ -42,7 +42,8 @@ class TestOGG : public CppUnit::TestFixture
 {
   CPPUNIT_TEST_SUITE(TestOGG);
   CPPUNIT_TEST(testSimple);
-  CPPUNIT_TEST(testSplitPackets);
+  CPPUNIT_TEST(testSplitPackets1);
+  CPPUNIT_TEST(testSplitPackets2);
   CPPUNIT_TEST(testDictInterface1);
   CPPUNIT_TEST(testDictInterface2);
   CPPUNIT_TEST(testAudioProperties);
@@ -67,18 +68,16 @@ public:
     }
   }
 
-  void testSplitPackets()
+  void testSplitPackets1()
   {
     ScopedFileCopy copy("empty", ".ogg");
     string newname = copy.fileName();
 
-    String longText(std::string(128 * 1024, ' ').c_str());
-    for (size_t i = 0; i < longText.length(); ++i)
-      longText[i] = static_cast<wchar_t>(L'A' + (i % 26));
+    const String text = longText(128 * 1024, true);
 
     {
       Vorbis::File f(newname.c_str());
-      f.tag()->setTitle(longText);
+      f.tag()->setTitle(text);
       f.save();
     }
     {
@@ -89,7 +88,7 @@ public:
       CPPUNIT_ASSERT_EQUAL(30U, f.packet(0).size());
       CPPUNIT_ASSERT_EQUAL(131127U, f.packet(1).size());
       CPPUNIT_ASSERT_EQUAL(3832U, f.packet(2).size());
-      CPPUNIT_ASSERT_EQUAL(longText, f.tag()->title());
+      CPPUNIT_ASSERT_EQUAL(text, f.tag()->title());
 
       CPPUNIT_ASSERT(f.audioProperties());
       CPPUNIT_ASSERT_EQUAL(3685, f.audioProperties()->lengthInMilliseconds());
@@ -109,6 +108,33 @@ public:
 
       CPPUNIT_ASSERT(f.audioProperties());
       CPPUNIT_ASSERT_EQUAL(3685, f.audioProperties()->lengthInMilliseconds());
+    }
+  }
+
+  void testSplitPackets2()
+  {
+    ScopedFileCopy copy("empty", ".ogg");
+    string newname = copy.fileName();
+
+    const String text = longText(60890, true);
+
+    {
+      Vorbis::File f(newname.c_str());
+      f.tag()->setTitle(text);
+      f.save();
+    }
+    {
+      Vorbis::File f(newname.c_str());
+      CPPUNIT_ASSERT(f.isValid());
+      CPPUNIT_ASSERT_EQUAL(text, f.tag()->title());
+
+      f.tag()->setTitle("ABCDE");
+      f.save();
+    }
+    {
+      Vorbis::File f(newname.c_str());
+      CPPUNIT_ASSERT(f.isValid());
+      CPPUNIT_ASSERT_EQUAL(String("ABCDE"), f.tag()->title());
     }
   }
 
